@@ -112,7 +112,7 @@ window.onload = function(){
         if (number <= 9){
             return "00" + number;
         }
-        else if (number > 9 && number < 99) {
+        else if (number > 9 && number <= 99) {
             return "0" + number;
         } 
         else{
