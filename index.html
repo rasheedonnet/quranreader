@@ -8,6 +8,8 @@
     <title>Quran Reader</title>
     <link rel="icon" type="image/png" href="favicon.png">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
+    <link rel="stylesheet" href="css/style.css">
+    
     <!--link href="css/style.css" rel="stylesheet" /-->
     <script src="https://code.jquery.com/jquery-3.5.1.min.js"
         integrity="sha256-9/aliU8dGd2tb6OSsuzixeV4y/faTqgFtohetphbbj0=" crossorigin="anonymous"></script>
@@ -21,40 +23,40 @@
         <h1>Quran Reader</h1>
     </div>
     <div class="container">
-        <form>
-            <div class="form-group">
-                <label>Surah:</label>
-                <select id="surah-list" class="form-control"></select>
-                <div class="subrow">
-                    From Ayah:<select id="ayah-start" class="element select small"></select>
-                    To Ayah:<select id="ayah-end" class="element select small"></select>
-                </div>
+        <div class="form-group">
+            <h5>Surah</h5>
+            <select id="surah-list" class="form-control"></select>
+            <div class="subrow">
+                <label>From Ayah:</label><select id="ayah-start" class="element select small"></select>
+                <label>To Ayah:</label><select id="ayah-end" class="element select small"></select>
             </div>
-            <div class="form-group">
-                <label>Arabic Recitations:</label>
-                <select id="list-recitation" class="form-control">
-                    <option value="Abdul_Basit_Murattal_64kbps" selected="true">Abdul Basit Murattal
-                    </option>
-                    <option value="Abdullah_Basfar_192kbps">Abdullah Basar</option>
-                    <option value="Abdurrahmaan_As-Sudais_64kbps">Abdurrahmaan As-Sudais</option>
-                    <option value="Husary_64kbps">Husary</option>
-                    <option value="Saood_ash-Shuraym_64kbps">Saood As-Shuraym</option>
-                </select>
-            </div>
-            <div class="form-group">
-                <label>Translation:</label>
-                <select id="list-translation" class="form-control">
-                    <option value="English/Sahih_Intnl_Ibrahim_Walk_192kbps" selected="true">(English) Translated by Sahih International Recited by Ibrahim Walk
-                    </option>
-                    <option value="translations/Fooladvand_Hedayatfar_40Kbps">(Persian) Translated by Fooladvand Recited by Hedayatfar</option>
-                    <option value="translations/urdu_shamshad_ali_khan_46kbps">(Urdu) Shamshad Ali Khan</option>
-                </select>
-            </div>
-            
-            <button id="playBtn" onclick="playBtnClick()" class="btn btn-primary">Play</button>
+        </div>
+        <div class="form-group">
+            <h5>Arabic Recitations</h5>
+            <select id="list-recitation" class="form-control">
+                <option value="Abdul_Basit_Murattal_64kbps" selected="true">Abdul Basit Murattal
+                </option>
+                <option value="Abdullah_Basfar_192kbps">Abdullah Basar</option>
+                <option value="Abdurrahmaan_As-Sudais_64kbps">Abdurrahmaan As-Sudais</option>
+                <option value="Husary_64kbps">Husary</option>
+                <option value="Saood_ash-Shuraym_64kbps">Saood As-Shuraym</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <h5>Translation</h5>
+            <select id="list-translation" class="form-control">
+                <option value="English/Sahih_Intnl_Ibrahim_Walk_192kbps" selected="true">(English) Translated by Sahih International Recited by Ibrahim Walk
+                </option>
+                <option value="translations/Fooladvand_Hedayatfar_40Kbps">(Persian) Translated by Fooladvand Recited by Hedayatfar</option>
+                <option value="translations/urdu_shamshad_ali_khan_46kbps">(Urdu) Shamshad Ali Khan</option>
+            </select>
+        </div>
+        <div class="form-group">
             <label id="playProgress"></label>
-            
-        </form>
+        </div>
+        <button id="playBtn" onclick="playBtnClick()" class="btn btn-primary">Play</button>
+        <button id="resetBtn" onclick="resetBtnClick()" class="btn btn-primary">Reset</button>
+        <audio id="player"> </audio>
     </div>
 </body>
 </html>
