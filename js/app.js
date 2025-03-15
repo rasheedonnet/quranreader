@@ -9,69 +9,112 @@ window.onload = function(){
     let translation = $('#list-translation');
     let playProgress = $('#playProgress');
     let playBtn = $('#playBtn');
+    let audioToggle = $('#audioToggle');
+    let translationToggle = $('#translationToggle');
     var myAudio = document.getElementById('player');
     var playlist = new Array();
 
     initializePage();
 
-    playBtnClick = function() { 
-        var audioSourceBaseUrl = 'https://everyayah.com/data/';
-
-        if (playBtn.text() == 'Play'){
-            playBtn.text('Stop');
-            if(myAudio.paused && playlist.length > 0){
-                myAudio.play();
-            }
-            else{
-                playlist = createPlaylist();
-                i = 0;
-                myAudio.addEventListener('ended', function () {
-                    i = ++i;
-                    
-                    if(i == playlist.length){
-                        myAudio.pause();
-                        playBtn.text('Play');
-                        playProgress.text("");
-                        return;
-                    }
-                    else{
-                        playProgress.text("Playing ayah:" + playlist[i].split('/').pop().substring(3,6));
-                    }
-                    myAudio.src = audioSourceBaseUrl + playlist[i];
-                    
-                    myAudio.play();
-                }, true);
-                myAudio.loop = false;
-                myAudio.src = audioSourceBaseUrl + playlist[0];
-                myAudio.play();
-            }
-        }
-        else{
-            playBtn.text('Play');  
-            myAudio.pause();
-        }
-    }
+    // This is replaced by the new implementation below
     
     resetBtnClick = function() { 
         location.reload();
     }
 
     function initializePage(){
+        // Make sure the Play button starts with "Play" text
+        playBtn.text('Play');
+        
         surahSelect.empty();
-        surahSelect.append('<option selected="true" disabled>Select Surah</option>');
-        surahSelect.prop('selectedIndex', 0);
+        surahSelect.append('<option disabled>Select Surah</option>');
         ayahStart.empty();
         ayahEnd.empty();
         // Populate dropdown with list of suras
         $.getJSON(surahJson, function (data) {
             $.each(data.quran.suras.sura, function (key, entry) {
                 var displaySurah = entry.index + '.' + entry.tname + ' (' + entry.name + ')';
-                surahSelect.append($('<option></option>').attr('value', entry.index).text(displaySurah));
-            })
+                var selected = (entry.index == 1) ? 'selected' : '';
+                surahSelect.append($('<option ' + selected + '></option>').attr('value', entry.index).text(displaySurah));
+            });
+            
+            // Set the initialLoadComplete flag to false to prevent auto-playback
+            window.initialLoadComplete = false;
+            
+            // Trigger change event to load ayahs for the first surah
+            surahSelect.trigger('change');
         });
     }
 
     
+    // Function to automatically play when selections change
+    function startPlayback() {
+        // Reset and stop any current playback
+        if (playBtn.text() == 'Stop') {
+            myAudio.pause();
+        }
+        
+        // Start playing the new selection
+        playlist = createPlaylist();
+        if (playlist.length > 0) {
+            var audioSourceBaseUrl = 'https://everyayah.com/data/';
+            playBtn.text('Stop');
+            i = 0;
+            
+            // Store current track index in a global variable
+            window.currentTrackIndex = 0;
+            
+            // Remove previous ended event handlers to avoid duplicates
+            myAudio.removeEventListener('ended', playNextAyah);
+            
+            // Add the event listener for continuous playback
+            myAudio.addEventListener('ended', playNextAyah, true);
+            
+            myAudio.loop = false;
+            myAudio.src = audioSourceBaseUrl + playlist[0];
+            playProgress.text("Playing ayah:" + playlist[0].split('/').pop().substring(3,6));
+            myAudio.play();
+        }
+    }
+    
+    // Event handler for the ended event
+    function playNextAyah() {
+        i = ++i;
+        window.currentTrackIndex = i;
+        var audioSourceBaseUrl = 'https://everyayah.com/data/';
+        
+        if(i == playlist.length){
+            myAudio.pause();
+            playBtn.text('Play');
+            playProgress.text("");
+            return;
+        }
+        else{
+            playProgress.text("Playing ayah:" + playlist[i].split('/').pop().substring(3,6));
+        }
+        myAudio.src = audioSourceBaseUrl + playlist[i];
+        myAudio.play();
+    }
+
+    // Update the Play button function to use the shared playback logic
+    playBtnClick = function() {
+        if (playBtn.text() == 'Play') {
+            // If playlist exists and we're just paused, resume playback
+            if (playlist.length > 0 && myAudio.paused && myAudio.src) {
+                playBtn.text('Stop');
+                myAudio.play();
+            } else {
+                // Otherwise start new playback
+                startPlayback();
+            }
+        } else {
+            // Pause the audio but maintain current position
+            playBtn.text('Play');  
+            myAudio.pause();
+        }
+    }
+
+    // Handle surah selection change
     $("#surah-list").change(function() {
         $.getJSON(surahJson, function (data) {
             ayahStart.empty();
@@ -84,8 +127,85 @@ window.onload = function(){
                     }
                     ayahEnd.val(entry.ayas);
                 }
-            })
+            });
+            
+            // Create playlist and start playback on surah change
+            playlist = createPlaylist();
+            
+            // Only start playback if this isn't the initial page load
+            if (window.initialLoadComplete) {
+                startPlayback();
+                // Make sure Play button shows Stop
+                playBtn.text('Stop');
+            }
         });
+    });
+    
+    // Set flag after initial load is complete
+    $(document).ready(function() {
+        // Short delay to ensure page is fully loaded before enabling auto-play
+        setTimeout(function() {
+            window.initialLoadComplete = true;
+        }, 500);
+    });
+    
+    // Handle ayah start selection change
+    ayahStart.change(function() {
+        // Ensure end ayah is never less than start ayah
+        if (parseInt(ayahEnd.val()) < parseInt(ayahStart.val())) {
+            ayahEnd.val(ayahStart.val());
+        }
+        
+        // Update playlist and start playback
+        playlist = createPlaylist();
+        startPlayback();
+        // Make sure Play button shows Stop
+        playBtn.text('Stop');
+    });
+    
+    // Handle ayah end selection change
+    ayahEnd.change(function() {
+        // Update playlist and start playback
+        playlist = createPlaylist();
+        startPlayback();
+        // Make sure Play button shows Stop
+        playBtn.text('Stop');
+    });
+    
+    // Handle recitation change
+    recitation.change(function() {
+        // Update playlist and start playback
+        playlist = createPlaylist();
+        startPlayback();
+        // Make sure Play button shows Stop
+        playBtn.text('Stop');
+    });
+    
+    // Handle translation change
+    translation.change(function() {
+        // Update playlist and start playback
+        playlist = createPlaylist();
+        startPlayback();
+        // Make sure Play button shows Stop
+        playBtn.text('Stop');
+    });
+    
+    // Handle audio toggle change
+    audioToggle.change(function() {
+        // Update playlist and start playback
+        playlist = createPlaylist();
+        startPlayback();
+        // Make sure Play button shows Stop
+        playBtn.text('Stop');
+    });
+    
+    // Handle translation toggle change
+    translationToggle.change(function() {
+        // Update playlist and start playback
+        playlist = createPlaylist();
+        startPlayback();
+        // Make sure Play button shows Stop
+        playBtn.text('Stop');
     });
 
     function createPlaylist()
@@ -93,16 +213,26 @@ window.onload = function(){
         var awudhuBillah = '001000.mp3';
         var bismillah = '001001.mp3';
         var niyath = [];
+        var isAudioEnabled = audioToggle.prop('checked');
+        var isTranslationEnabled = translationToggle.prop('checked');
         
         //var ayas = new Array(awudhuBillah, bismillah);
         var ayas = new Array();
-        ayas.push(recitation.val() + "/" + awudhuBillah)
-        if(surahSelect.val()!="1"){
-            ayas.push(recitation.val() + "/" + bismillah)
+        
+        if(isAudioEnabled) {
+            ayas.push(recitation.val() + "/" + awudhuBillah)
+            if(surahSelect.val()!="1"){
+                ayas.push(recitation.val() + "/" + bismillah)
+            }
         }
+        
         for (i=parseInt(ayahStart.val()); i<=parseInt(ayahEnd.val()); i++){
-            ayas.push(recitation.val() + "/" + prependZero(surahSelect.val()) + prependZero(i) + '.mp3')
-            ayas.push(translation.val() + "/" + prependZero(surahSelect.val()) + prependZero(i) + '.mp3')
+            if(isAudioEnabled) {
+                ayas.push(recitation.val() + "/" + prependZero(surahSelect.val()) + prependZero(i) + '.mp3')
+            }
+            if(isTranslationEnabled) {
+                ayas.push(translation.val() + "/" + prependZero(surahSelect.val()) + prependZero(i) + '.mp3')
+            }
         }
         
         return niyath.concat(ayas);
