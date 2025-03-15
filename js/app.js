@@ -24,7 +24,7 @@ window.onload = function(){
 
     function initializePage(){
         // Make sure the Play button starts with "Play" text
-        playBtn.text('Play');
+        playBtn.html('<i class="fas fa-play mr-2"></i>Play');
         
         surahSelect.empty();
         surahSelect.append('<option disabled>Select Surah</option>');
@@ -50,7 +50,7 @@ window.onload = function(){
     // Function to automatically play when selections change
     function startPlayback() {
         // Reset and stop any current playback
-        if (playBtn.text() == 'Stop') {
+        if (playBtn.text().includes('Stop')) {
             myAudio.pause();
         }
         
@@ -58,7 +58,7 @@ window.onload = function(){
         playlist = createPlaylist();
         if (playlist.length > 0) {
             var audioSourceBaseUrl = 'https://everyayah.com/data/';
-            playBtn.text('Stop');
+            playBtn.html('<i class="fas fa-stop mr-2"></i>Stop');
             i = 0;
             
             // Store current track index in a global variable
@@ -72,7 +72,8 @@ window.onload = function(){
             
             myAudio.loop = false;
             myAudio.src = audioSourceBaseUrl + playlist[0];
-            playProgress.text("Playing ayah:" + playlist[0].split('/').pop().substring(3,6));
+            playProgress.text("Playing ayah: " + playlist[0].split('/').pop().substring(3,6));
+            playProgress.show();
             myAudio.play();
         }
     }
@@ -85,12 +86,13 @@ window.onload = function(){
         
         if(i == playlist.length){
             myAudio.pause();
-            playBtn.text('Play');
+            playBtn.html('<i class="fas fa-play mr-2"></i>Play');
             playProgress.text("");
             return;
         }
         else{
-            playProgress.text("Playing ayah:" + playlist[i].split('/').pop().substring(3,6));
+            playProgress.text("Playing ayah: " + playlist[i].split('/').pop().substring(3,6));
+            playProgress.show();
         }
         myAudio.src = audioSourceBaseUrl + playlist[i];
         myAudio.play();
@@ -98,10 +100,10 @@ window.onload = function(){
 
     // Update the Play button function to use the shared playback logic
     playBtnClick = function() {
-        if (playBtn.text() == 'Play') {
+        if (playBtn.text().includes('Play')) {
             // If playlist exists and we're just paused, resume playback
             if (playlist.length > 0 && myAudio.paused && myAudio.src) {
-                playBtn.text('Stop');
+                playBtn.html('<i class="fas fa-stop mr-2"></i>Stop');
                 myAudio.play();
             } else {
                 // Otherwise start new playback
@@ -109,7 +111,7 @@ window.onload = function(){
             }
         } else {
             // Pause the audio but maintain current position
-            playBtn.text('Play');  
+            playBtn.html('<i class="fas fa-play mr-2"></i>Play');  
             myAudio.pause();
         }
     }
@@ -136,7 +138,7 @@ window.onload = function(){
             if (window.initialLoadComplete) {
                 startPlayback();
                 // Make sure Play button shows Stop
-                playBtn.text('Stop');
+                playBtn.html('<i class="fas fa-stop mr-2"></i>Stop');
             }
         });
     });
@@ -160,7 +162,7 @@ window.onload = function(){
         playlist = createPlaylist();
         startPlayback();
         // Make sure Play button shows Stop
-        playBtn.text('Stop');
+        playBtn.html('<i class="fas fa-stop mr-2"></i>Stop');
     });
     
     // Handle ayah end selection change
@@ -169,7 +171,7 @@ window.onload = function(){
         playlist = createPlaylist();
         startPlayback();
         // Make sure Play button shows Stop
-        playBtn.text('Stop');
+        playBtn.html('<i class="fas fa-stop mr-2"></i>Stop');
     });
     
     // Handle recitation change
@@ -178,7 +180,7 @@ window.onload = function(){
         playlist = createPlaylist();
         startPlayback();
         // Make sure Play button shows Stop
-        playBtn.text('Stop');
+        playBtn.html('<i class="fas fa-stop mr-2"></i>Stop');
     });
     
     // Handle translation change
@@ -187,7 +189,7 @@ window.onload = function(){
         playlist = createPlaylist();
         startPlayback();
         // Make sure Play button shows Stop
-        playBtn.text('Stop');
+        playBtn.html('<i class="fas fa-stop mr-2"></i>Stop');
     });
     
     // Handle audio toggle change
@@ -196,7 +198,7 @@ window.onload = function(){
         playlist = createPlaylist();
         startPlayback();
         // Make sure Play button shows Stop
-        playBtn.text('Stop');
+        playBtn.html('<i class="fas fa-stop mr-2"></i>Stop');
     });
     
     // Handle translation toggle change
@@ -205,7 +207,7 @@ window.onload = function(){
         playlist = createPlaylist();
         startPlayback();
         // Make sure Play button shows Stop
-        playBtn.text('Stop');
+        playBtn.html('<i class="fas fa-stop mr-2"></i>Stop');
     });
 
     function createPlaylist()

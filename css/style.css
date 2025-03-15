@@ -1,0 +1,151 @@
+/* Main Styles for Quran Reader */
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #f8f9fa;
+    color: #333;
+}
+
+.jumbotron {
+    background: linear-gradient(135deg, #1e5799 0%, #2989d8 50%, #207cca 51%, #7db9e8 100%);
+    color: white;
+    margin-bottom: 2rem;
+    border-radius: 0;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.jumbotron h1 {
+    font-weight: 600;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+    padding: 10px 0;
+}
+
+.container {
+    background-color: white;
+    border-radius: 10px;
+    padding: 25px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    margin-bottom: 3rem;
+}
+
+h5 {
+    color: #1e5799;
+    font-weight: 600;
+    margin-bottom: 15px;
+    border-bottom: 2px solid #e9ecef;
+    padding-bottom: 8px;
+}
+
+.form-group {
+    margin-bottom: 25px;
+}
+
+.form-control {
+    border-radius: 5px;
+    border: 1px solid #ced4da;
+}
+
+.form-control:focus {
+    border-color: #1e5799;
+    box-shadow: 0 0 0 0.2rem rgba(30, 87, 153, 0.25);
+}
+
+.subrow {
+    display: flex;
+    align-items: center;
+    margin-top: 10px;
+    flex-wrap: wrap;
+}
+
+.subrow label {
+    margin-right: 10px;
+    margin-bottom: 0;
+    font-weight: 500;
+    min-width: 80px;
+}
+
+.subrow select {
+    width: 80px;
+    margin-right: 20px;
+}
+
+.custom-control.custom-switch {
+    margin-left: 15px;
+    position: relative;
+    top: -1px;
+}
+
+.custom-control-label {
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    font-weight: 600;
+    color: #6c757d;
+}
+
+.custom-control-label::before {
+    border-color: #1e5799;
+}
+
+.custom-switch .custom-control-input:checked ~ .custom-control-label::before {
+    background-color: #1e5799;
+    border-color: #1e5799;
+}
+
+#playProgress {
+    display: block;
+    color: #1e5799;
+    font-weight: 500;
+    margin-bottom: 15px;
+    font-size: 1.1rem;
+    height: 30px;
+}
+
+.btn {
+    padding: 8px 25px;
+    font-weight: 500;
+    margin-right: 10px;
+    border-radius: 5px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
+}
+
+.btn-primary {
+    background-color: #1e5799;
+    border-color: #1e5799;
+}
+
+.btn-primary:hover, .btn-primary:focus {
+    background-color: #154a80;
+    border-color: #154a80;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+#resetBtn {
+    background-color: #6c757d;
+    border-color: #6c757d;
+}
+
+#resetBtn:hover, #resetBtn:focus {
+    background-color: #5a6268;
+    border-color: #5a6268;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .jumbotron h1 {
+        font-size: 2rem;
+    }
+    
+    .subrow {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+    
+    .subrow label {
+        margin-bottom: 5px;
+    }
+    
+    .subrow select {
+        margin-bottom: 10px;
+        width: 100%;
+    }
+}
