@@ -44,6 +44,18 @@ h5 {
     border: 1px solid #ced4da;
 }
 
+/* Fix for dropdown text truncation */
+select.form-control {
+    white-space: normal;
+    height: auto;
+}
+
+/* Ensure dropdown options show full text */
+select.form-control option {
+    white-space: normal;
+    padding: 8px;
+}
+
 .form-control:focus {
     border-color: #1e5799;
     box-shadow: 0 0 0 0.2rem rgba(30, 87, 153, 0.25);
@@ -96,7 +108,7 @@ h5 {
     font-weight: 500;
     margin-bottom: 15px;
     font-size: 1.1rem;
-    height: 30px;
+    height: 40px;
 }
 
 .btn {
